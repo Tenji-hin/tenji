@@ -10,7 +10,9 @@ class ProfileParser(ParserBase):
         status = self.try_get_text("span.tbx-target-STATUS")
 
         # get background from style
-        banner = self.try_get_style_background(self._soup.select_one("div.the-banner").get("style"))
+        banner = self.try_get_style_background(
+            self._soup.select_one("div.the-banner").get("style")
+        )
 
         avatar = self._soup.select_one("img.the-avatar").get("src")
         stats_container = self._soup.select_one("div.object-stats")
