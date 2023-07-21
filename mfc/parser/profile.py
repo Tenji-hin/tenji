@@ -1,4 +1,3 @@
-from bs4 import BeautifulSoup
 from mfc.model.profile import About, Profile
 from mfc.parser import ParserBase
 
@@ -7,18 +6,22 @@ class ProfileParser(ParserBase):
     def parse(self) -> Profile:
         username = self._soup.select_one("span.h1-headline-value > span.headline").text
 
-        subtitle_node = self._soup.select_one("span.h1-headline-value > span.subtitle")
-        subtitle = subtitle_node.text if subtitle_node else None
+        subtitle = self.try_get_text("span.h1-headline-value > span.subtitle")
+        status = self.try_get_text("span.tbx-target-STATUS")
 
-        status_node = self._soup.select_one("span.tbx-target-STATUS")
-        status = status_node.text if status_node else None
+        # get background from style
+        banner = self.try_get_style_background(self._soup.select_one("div.the-banner").get("style"))
 
         avatar = self._soup.select_one("img.the-avatar").get("src")
         stats_container = self._soup.select_one("div.object-stats")
-        online_status = stats_container.select_one("span:nth-child(1)").text
-        joined = stats_container.select_one("span:nth-child(2)").text
-        hits = stats_container.contents[6].text
-        rank = None
+        last_visit = stats_container.select_one("span:nth-child(1)").text
+        joined_node = stats_container.select_one("span:nth-child(2)")
+        joined_relative = joined_node.text
+        joined = joined_node.get("title")
+
+        eye_icon_node = stats_container.select_one("span.icon-eye")
+        hits = self.try_extract_number(eye_icon_node.next_sibling)
+        placement = self.try_extract_number(stats_container.select_one("small").text)
 
         about_container = self._soup.select_one("div.data_2")
 
@@ -64,10 +67,11 @@ class ProfileParser(ParserBase):
             username=username,
             subtitle=subtitle,
             status=status,
+            banner=banner,
             avatar=avatar,
-            online_status=online_status,
+            last_visit=last_visit,
             joined=joined,
             hits=hits,
-            rank=rank,
+            placement=placement,
             about=about,
         )

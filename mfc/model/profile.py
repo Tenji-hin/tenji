@@ -19,6 +19,11 @@ class Profile(BaseModel):
 
     subtitle: Optional[str] = None
     status: Optional[str] = None
+    banner: Optional[str] = None
     avatar: Optional[str] = None
+    last_visit: Optional[str] = None
+    joined: Optional[str] = None
+    hits: Optional[int] = None
+    placement: Optional[int] = None
 
     about: About
