@@ -22,3 +22,6 @@ class CollectionRequest(RequestBase):
 
     def getPath(self) -> str:
         return f"{self.BASE_URL}users.v4.php?mode=view&username={self.username}&tab=collection&page={self.page}&status={self.status}&output=0"
+
+    def getMethod(self):
+        return "GET"

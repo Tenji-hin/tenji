@@ -7,3 +7,6 @@ class ItemRequest(RequestBase):
 
     def getPath(self) -> str:
         return f"{self.BASE_URL}item/{self.id}"
+
+    def getMethod(self):
+        return "GET"

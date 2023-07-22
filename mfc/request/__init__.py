@@ -3,3 +3,6 @@ class RequestBase:
 
     def getPath(self):
         raise NotImplementedError()
+
+    def getMethod(self):
+        raise NotImplementedError()

@@ -7,3 +7,6 @@ class ProfileRequest(RequestBase):
 
     def getPath(self) -> str:
         return f"{self.BASE_URL}profile/{self.username}"
+
+    def getMethod(self):
+        return "GET"
