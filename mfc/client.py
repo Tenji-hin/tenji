@@ -69,9 +69,10 @@ class MfcClient:
         cookies = response.response.cookies
         if cookies:
             self._session.cookie_jar.update_cookies(cookies)
-        filtered = self._session.cookie_jar.filter_cookies("https://myfigurecollection.net")
+        filtered = self._session.cookie_jar.filter_cookies(
+            "https://myfigurecollection.net"
+        )
         return (success, filtered)
-    
 
     async def logout(self) -> bool:
         url = "https://myfigurecollection.net/session/signout/"
@@ -98,10 +99,10 @@ class MfcClient:
         return profile
 
     async def get_collection(
-        self, username: str, status: CollectionStatus
+        self, username: str, status: CollectionStatus, page: int = 1
     ) -> Collection:
         """Returns a Collection object for the given username and status"""
-        req = CollectionRequest(username, status)
+        req = CollectionRequest(username, status, page)
         res = await self.__perform_modeled_request(req)
         try:
             parser = CollectionParser(res.soup)
