@@ -41,7 +41,7 @@ class ParserBase:
     def try_get_list(self, selector: str, parent: Tag = None, default_value=None):
         text = self.try_get_text(selector, parent, default_value)
         if text:
-            return text.split(",")
+            return [x.strip() for x in text.split(",")]
         return default_value
 
     def try_extract_number(self, text: str, default_value=None):
