@@ -9,9 +9,13 @@ class About(BaseModel):
     location: Optional[str] = None
     occupation: Optional[str] = None
     homepage: Optional[str] = None
-    shows: Optional[list[str]] = None
-    games: Optional[list[str]] = None
-    moe_points: Optional[list[str]] = None
+    shows: Optional[str] = None
+    books: Optional[str] = None
+    games: Optional[str] = None
+    music: Optional[str] = None
+    moe_points: Optional[str] = None
+    computer: Optional[str] = None
+    camera: Optional[str] = None
 
 
 class Profile(BaseModel):
@@ -21,6 +25,7 @@ class Profile(BaseModel):
     status: Optional[str] = None
     banner: Optional[str] = None
     avatar: Optional[str] = None
+    rank: Optional[str] = None
     last_visit: Optional[str] = None
     joined: Optional[str] = None
     hits: Optional[int] = None

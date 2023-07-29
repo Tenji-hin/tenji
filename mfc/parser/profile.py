@@ -43,14 +43,20 @@ class ProfileParser(ParserBase):
         homepage = self.try_get_text(
             "div.form-label:contains('Homepage') + div > a", about_container
         )
-        shows = self.try_get_list(
-            "div.form-label:contains('Shows(s)') + div > a", about_container, []
+        shows = self.try_get_text(
+            "div.form-label:contains('Shows(s)') + div > a", about_container
         )
-        games = self.try_get_list(
-            "div.form-label:contains('Game(s)') + div", about_container, []
+        books = self.try_get_text(
+            "div.form-label:contains('Book(s)') + div", about_container
         )
-        moe_points = self.try_get_list(
-            "div.form-label:contains('MOE Point(s)') + div", about_container, []
+        games = self.try_get_text(
+            "div.form-label:contains('Game(s)') + div", about_container
+        )
+        games = self.try_get_text(
+            "div.form-label:contains('Game(s)') + div", about_container
+        )
+        moe_points = self.try_get_text(
+            "div.form-label:contains('MOE Point(s)') + div", about_container
         )
 
         about = About(
