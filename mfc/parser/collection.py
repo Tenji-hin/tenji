@@ -1,5 +1,6 @@
 from unicodedata import category
 from pydantic import BaseModel
+from mfc.model.category import get_item_category_from_str
 from mfc.model.collection import Collection
 from mfc.model.item import Item
 from mfc.model.paginated import Pagination
@@ -17,7 +18,9 @@ class CollectionParser(ParserBase):
             id = self.try_extract_number(link.get("href"))
             thumbnail = link.select_one("img").get("src")
             name = link.select_one("img").get("alt")
-            category = result.select_one("div.stamp-category").text
+            category = get_item_category_from_str(
+                result.select_one("div.stamp-category").text
+            )
 
             item = Item(
                 id=id,

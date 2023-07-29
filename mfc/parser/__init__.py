@@ -56,3 +56,15 @@ class ParserBase:
         if match:
             return match.group(1)
         return None
+
+    def try_get_text(self, selector: str, parent: Tag = None, default_value=None):
+        node = self.try_get_tag(selector, parent)
+        if node:
+            return node.text
+        return default_value
+
+    def get_next_sibling_of(self, selector: str, parent: Tag = None):
+        node = self.try_get_tag(selector, parent)
+        if node and node.next_sibling:
+            return node.next_sibling
+        return None

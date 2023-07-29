@@ -1,3 +1,4 @@
+from mfc.model.category import get_item_category_from_str
 from mfc.model.item import Item
 from mfc.model.user_list import UserList
 from mfc.model.paginated import Pagination
@@ -28,7 +29,9 @@ class UserListParser(ParserBase):
             item_id = self.try_extract_number(link.get("href"))
             item_thumbnail = link.select_one("img").get("src")
             item_name = link.select_one("img").get("alt")
-            item_category = item_stamp.select_one("div.stamp-category").text
+            item_category = get_item_category_from_str(
+                item_stamp.select_one("div.stamp-category").text
+            )
 
             item = Item(
                 id=item_id,

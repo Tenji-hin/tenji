@@ -1,3 +1,4 @@
+from enum import Enum
 from mfc.request import RequestBase
 
 
