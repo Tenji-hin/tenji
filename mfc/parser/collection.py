@@ -1,3 +1,4 @@
+from unicodedata import category
 from pydantic import BaseModel
 from mfc.model.collection import Collection
 from mfc.model.item import Item
@@ -16,11 +17,13 @@ class CollectionParser(ParserBase):
             id = self.try_extract_number(link.get("href"))
             thumbnail = link.select_one("img").get("src")
             name = link.select_one("img").get("alt")
+            category = result.select_one("div.stamp-category").text
 
             item = Item(
                 id=id,
                 name=name,
                 thumbnail=thumbnail,
+                category=category,
             )
 
             items.append(item)
