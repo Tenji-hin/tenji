@@ -1,8 +1,8 @@
 from unicodedata import category
 from pydantic import BaseModel
 from mfc.model.category import get_item_category_from_str
-from mfc.model.collection import Collection
-from mfc.model.item import Item
+from mfc.model.user.collection import Collection
+from mfc.model.item.item import Item
 from mfc.model.paginated import Pagination
 from mfc.parser import ParserBase
 

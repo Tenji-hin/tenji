@@ -1,4 +1,4 @@
-from mfc.model.profile import About, Profile
+from mfc.model.user.profile import About, Profile
 from mfc.parser import ParserBase
 
 

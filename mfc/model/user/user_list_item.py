@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 
-class UserListBasic(BaseModel):
+class UserListItem(BaseModel):
     id: int
     name: str
     owner: str

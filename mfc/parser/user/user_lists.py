@@ -1,11 +1,12 @@
 from mfc.model.paginated import Pagination
-from mfc.model.user_list_basic import UserListBasic
-from mfc.model.users_lists import UserLists
+from mfc.model.user.user_list_item import UserListItem
+
+from mfc.model.user.users_lists import UserLists
 from mfc.parser import ParserBase
 
 
 class UserListsParser(ParserBase):
-    def parse(self) -> UserListBasic:
+    def parse(self) -> UserListItem:
         items = []
 
         results = self._soup.select("div.list-data")
@@ -21,7 +22,7 @@ class UserListsParser(ParserBase):
             created = creation_node.get("title")
             count = self.try_extract_number(creation_node.next_sibling.text)
 
-            list = UserListBasic(
+            list = UserListItem(
                 id=list_id,
                 icon=icon,
                 name=name,

@@ -1,7 +1,8 @@
 from mfc.model.category import get_item_category_from_str
-from mfc.model.item import Item
-from mfc.model.user_list import UserList
+from mfc.model.item.item import Item
+
 from mfc.model.paginated import Pagination
+from mfc.model.user.user_list import UserList
 from mfc.parser import ParserBase
 
 

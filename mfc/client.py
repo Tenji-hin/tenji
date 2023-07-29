@@ -1,26 +1,26 @@
-from http.cookies import Morsel, SimpleCookie
+from http.cookies import SimpleCookie
 from bs4 import BeautifulSoup
 from mfc.exceptions.parser_exception import ParserException
-from mfc.model.collection import Collection
-from mfc.model.item import Item
-from mfc.model.user_list import UserList
-from mfc.model.users_lists import UserLists
-from mfc.parser.collection import CollectionParser
+from mfc.model.user.collection import Collection
+from mfc.model.item.item import Item
+from mfc.model.user.user_list import UserList
+from mfc.model.user.users_lists import UserLists
+from mfc.parser.user.collection import CollectionParser
 from mfc.parser.home import HomeParser
-from mfc.parser.item import ItemParser
-from mfc.parser.user_list import UserListParser
-from mfc.parser.profile import ProfileParser
-from mfc.parser.user_lists import UserListsParser
+from mfc.parser.item.item import ItemParser
+from mfc.parser.user.user_list import UserListParser
+from mfc.parser.user.profile import ProfileParser
+from mfc.parser.user.user_lists import UserListsParser
 from mfc.request import RequestBase
-from mfc.request.collection import CollectionRequest, CollectionStatus
+from mfc.request.user.collection import CollectionRequest, CollectionStatus
 from mfc.request.home import HomeRequest
-from mfc.request.item import ItemRequest
-from mfc.request.user_list import UserListRequest
-from mfc.request.users_lists import UserListsRequest
+from mfc.request.item.item import ItemRequest
+from mfc.request.user.user_list import UserListRequest
+from mfc.request.user.users_lists import UserListsRequest
 from mfc.request.login import LoginRequest
 
-from mfc.request.profile import ProfileRequest
-from .model.profile import Profile
+from mfc.request.user.profile import ProfileRequest
+from .model.user.profile import Profile
 import aiohttp
 import logging
 

@@ -1,7 +1,7 @@
 from typing import Optional
 from pydantic import BaseModel
 
-from mfc.model.item import Item
+from mfc.model.item.item import Item
 from mfc.model.paginated import Pagination
 
 
