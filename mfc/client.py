@@ -3,14 +3,20 @@ from bs4 import BeautifulSoup
 from mfc.exceptions.parser_exception import ParserException
 from mfc.model.collection import Collection
 from mfc.model.item import Item
+from mfc.model.user_list import UserList
+from mfc.model.users_lists import UserLists
 from mfc.parser.collection import CollectionParser
 from mfc.parser.home import HomeParser
 from mfc.parser.item import ItemParser
+from mfc.parser.user_list import UserListParser
 from mfc.parser.profile import ProfileParser
+from mfc.parser.user_lists import UserListsParser
 from mfc.request import RequestBase
 from mfc.request.collection import CollectionRequest, CollectionStatus
 from mfc.request.home import HomeRequest
 from mfc.request.item import ItemRequest
+from mfc.request.user_list import UserListRequest
+from mfc.request.users_lists import UserListsRequest
 from mfc.request.login import LoginRequest
 
 from mfc.request.profile import ProfileRequest
@@ -112,6 +118,18 @@ class MfcClient:
             raise ParserException("Failed to parse collection")
         return collection
 
+    async def get_lists(self, username: str) -> UserLists:
+        """Gets public lists for a given user"""
+        req = UserListsRequest(username)
+        res = await self.__perform_modeled_request(req)
+        try:
+            parser = UserListsParser(res.soup)
+            lists = parser.parse()
+        except Exception as e:
+            self.logger.error(f"Failed to parse item: {e}")
+            raise ParserException("Failed to parse item")
+        return lists
+
     async def get_item(self, id: int) -> Item:
         """Returns an Item object for the given id"""
         req = ItemRequest(id)
@@ -124,6 +142,19 @@ class MfcClient:
             raise ParserException("Failed to parse item")
 
         return item
+
+    async def get_list(self, id: int, page: int = 1) -> UserList:
+        """Returns a List object for the given id"""
+        req = UserListRequest(id, page)
+        res = await self.__perform_modeled_request(req)
+        try:
+            parser = UserListParser(res.soup)
+            list = parser.parse()
+        except Exception as e:
+            self.logger.error(f"Failed to parse list: {e}")
+            raise ParserException("Failed to parse list")
+
+        return list
 
     async def __perform_modeled_request(self, req: RequestBase) -> MFCResponse:
         """Performs a request and returns the response"""
