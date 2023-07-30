@@ -1,9 +1,6 @@
-# MyFigureCollection Scraper
+# Tenji
 
-Asyncronous scraping library for MyFigureCollection (MFC).
-
-Still a work in progress, but the basic functionality is there.
-
+Asyncronous Python client for scraping data from MyFigureCollection (MFC).
 
 ## Usage
 
@@ -23,3 +20,8 @@ if __name__ == "__main__":
 ### Authenticated Requests
 
 There is some session support but as of right now the goal is to focus on non-authenticated requests.
+
+
+### Notes
+
+* The client currently relies on an English locale.
