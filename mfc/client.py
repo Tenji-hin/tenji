@@ -1,10 +1,12 @@
 from http.cookies import SimpleCookie
 from bs4 import BeautifulSoup
 from mfc.exceptions.parser_exception import ParserException
+from mfc.model.shop.shop import Shop
 from mfc.model.user.collection import Collection
 from mfc.model.item.item import Item
 from mfc.model.user.user_list import UserList
 from mfc.model.user.users_lists import UserLists
+from mfc.parser.shop.shop import ShopParser
 from mfc.parser.user.collection import CollectionParser
 from mfc.parser.home import HomeParser
 from mfc.parser.item.item import ItemParser
@@ -12,6 +14,7 @@ from mfc.parser.user.user_list import UserListParser
 from mfc.parser.user.profile import ProfileParser
 from mfc.parser.user.user_lists import UserListsParser
 from mfc.request import RequestBase
+from mfc.request.shop.shop import ShopRequest
 from mfc.request.user.collection import CollectionRequest, CollectionStatus
 from mfc.request.home import HomeRequest
 from mfc.request.item.item import ItemRequest
@@ -150,6 +153,18 @@ class MfcClient:
             raise ParserException.from_request(req, e)
 
         return list
+    
+    async def get_shop(self, id: int) -> Shop:
+        """Returns a Shop object for the given id"""
+        req = ShopRequest(id)
+        res = await self.__perform_modeled_request(req)
+        try:
+            parser = ShopParser(res.soup)
+            shop = parser.parse()
+        except Exception as e:
+            raise ParserException.from_request(req, e)
+        return shop
+        
 
     async def __perform_modeled_request(self, req: RequestBase) -> MFCResponse:
         """Performs a request and returns the response"""
