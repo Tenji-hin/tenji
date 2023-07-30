@@ -100,8 +100,7 @@ class MfcClient:
             parser = ProfileParser(res.soup)
             profile = parser.parse()
         except Exception as e:
-            self.logger.error(f"Failed to parse profile: {e}")
-            raise ParserException("Failed to parse profile")
+            raise ParserException.from_request(req, e)
         return profile
 
     async def get_collection(
@@ -114,8 +113,7 @@ class MfcClient:
             parser = CollectionParser(res.soup)
             collection = parser.parse()
         except Exception as e:
-            self.logger.error(f"Failed to parse collection: {e}")
-            raise ParserException("Failed to parse collection")
+            raise ParserException.from_request(req, e)
         return collection
 
     async def get_lists(self, username: str) -> UserLists:
@@ -126,8 +124,7 @@ class MfcClient:
             parser = UserListsParser(res.soup)
             lists = parser.parse()
         except Exception as e:
-            self.logger.error(f"Failed to parse item: {e}")
-            raise ParserException("Failed to parse item")
+            raise ParserException.from_request(req, e)
         return lists
 
     async def get_item(self, id: int) -> Item:
@@ -138,8 +135,7 @@ class MfcClient:
             parser = ItemParser(res.soup)
             item = parser.parse()
         except Exception as e:
-            self.logger.error(f"Failed to parse item: {e}")
-            raise ParserException("Failed to parse item")
+            raise ParserException.from_request(req, e)
 
         return item
 
@@ -151,8 +147,7 @@ class MfcClient:
             parser = UserListParser(res.soup)
             list = parser.parse()
         except Exception as e:
-            self.logger.error(f"Failed to parse list: {e}")
-            raise ParserException("Failed to parse list")
+            raise ParserException.from_request(req, e)
 
         return list
 
