@@ -1,12 +1,5 @@
-from enum import Enum
+from mfc.model.user.collectionstatus import CollectionStatus
 from mfc.request import RequestBase
-
-
-class CollectionStatus(str, Enum):
-    Wished = 0
-    Ordered = 1
-    Owned = 2
-    Favorites = 3
 
 
 class CollectionRequest(RequestBase):
