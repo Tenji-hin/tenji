@@ -3,7 +3,7 @@ from tenji.model.item.item import Item
 
 from tenji.model.paginated import Pagination
 from tenji.model.user.user_list import UserList
-from tenji.parser import ParserBase
+from tenji.parser.parser_base import ParserBase
 
 
 class UserListParser(ParserBase):

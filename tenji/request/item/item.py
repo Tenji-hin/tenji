@@ -1,5 +1,4 @@
-from enum import Enum
-from tenji.request import RequestBase
+from tenji.request.request_base import RequestBase
 
 
 class ItemRequest(RequestBase):

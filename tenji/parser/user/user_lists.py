@@ -1,8 +1,9 @@
 from tenji.model.paginated import Pagination
 from tenji.model.user.user_list_item import UserListItem
-
 from tenji.model.user.users_lists import UserLists
-from tenji.parser import ParserBase
+
+
+from tenji.parser.parser_base import ParserBase
 
 
 class UserListsParser(ParserBase):

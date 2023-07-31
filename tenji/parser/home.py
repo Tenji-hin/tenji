@@ -1,5 +1,5 @@
 from tenji.model.meta import Meta
-from tenji.parser import ParserBase
+from tenji.parser.parser_base import ParserBase
 
 
 class HomeParser(ParserBase):

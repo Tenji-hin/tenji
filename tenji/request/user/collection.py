@@ -1,5 +1,5 @@
 from tenji.model.user.collectionstatus import CollectionStatus
-from tenji.request import RequestBase
+from tenji.request.request_base import RequestBase
 
 
 class CollectionRequest(RequestBase):

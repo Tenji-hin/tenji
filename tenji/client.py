@@ -1,34 +1,13 @@
 from http.cookies import SimpleCookie
 from bs4 import BeautifulSoup
-from tenji.exceptions.parser_exception import ParserException
-from tenji.model.shop.shop import Shop
-from tenji.model.shop.shop_list_item import ShopListItem
-from tenji.model.user.collection import Collection
-from tenji.model.item.item import Item
-from tenji.model.user.user_list import UserList
-from tenji.model.user.users_lists import UserLists
-from tenji.parser.shop.shop import ShopParser
-from tenji.parser.shop.shops import ShopsParser
-from tenji.parser.user.collection import CollectionParser
-from tenji.parser.home import HomeParser
-from tenji.parser.item.item import ItemParser
-from tenji.parser.user.user_list import UserListParser
-from tenji.parser.user.profile import ProfileParser
-from tenji.parser.user.user_lists import UserListsParser
-from tenji.request import RequestBase
-from tenji.request.shop.shop import ShopRequest
-from tenji.request.shop.shops import ShopsRequest
-from tenji.request.user.collection import CollectionRequest, CollectionStatus
-from tenji.request.home import HomeRequest
-from tenji.request.item.item import ItemRequest
-from tenji.request.user.user_list import UserListRequest
-from tenji.request.user.users_lists import UserListsRequest
-from tenji.request.login import LoginRequest
-
-from tenji.request.user.profile import ProfileRequest
-from .model.user.profile import Profile
+from tenji.exceptions import *
+from tenji.model import *
+from tenji.parser import *
+from tenji.request import *
 import aiohttp
 import logging
+
+from tenji.request.request_base import RequestBase
 
 
 class MFCResponse:
@@ -110,7 +89,7 @@ class MfcClient:
         return profile
 
     async def get_collection(
-        self, username: str, status: CollectionStatus, page: int = 1
+        self, username: str, status: Collection, page: int = 1
     ) -> Collection:
         """Returns a Collection object for the given username and status"""
         req = CollectionRequest(username, status, page)

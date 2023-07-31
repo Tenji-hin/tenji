@@ -1,6 +1,6 @@
 from tenji.model.category import get_item_category_from_str
 from tenji.model.item.item import Item
-from tenji.parser import ParserBase
+from tenji.parser.parser_base import ParserBase
 
 
 class ItemParser(ParserBase):

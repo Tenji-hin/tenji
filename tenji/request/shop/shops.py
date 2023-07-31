@@ -1,5 +1,5 @@
 from tenji.model.shop.shop_category import ShopCategory
-from tenji.request import RequestBase
+from tenji.request.request_base import RequestBase
 
 
 class ShopsRequest(RequestBase):

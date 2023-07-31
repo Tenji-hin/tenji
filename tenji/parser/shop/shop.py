@@ -1,6 +1,6 @@
 from bs4 import PageElement
 from tenji.model.shop.shop import Shop
-from tenji.parser import ParserBase
+from tenji.parser.parser_base import ParserBase
 
 
 class ShopParser(ParserBase):

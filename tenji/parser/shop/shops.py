@@ -1,6 +1,6 @@
 from tenji.model.shop.shop_category import ShopCategory
 from tenji.model.shop.shop_list_item import ShopListItem
-from tenji.parser import ParserBase
+from tenji.parser.parser_base import ParserBase
 
 
 class ShopsParser(ParserBase):

@@ -1,4 +1,4 @@
-from tenji.request import RequestBase
+from tenji.request.request_base import RequestBase
 
 
 class ShopRequest(RequestBase):

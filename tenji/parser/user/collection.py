@@ -1,10 +1,8 @@
-from unicodedata import category
-from pydantic import BaseModel
 from tenji.model.category import get_item_category_from_str
 from tenji.model.user.collection import Collection
 from tenji.model.item.item import Item
 from tenji.model.paginated import Pagination
-from tenji.parser import ParserBase
+from tenji.parser.parser_base import ParserBase
 
 
 class CollectionParser(ParserBase):
@@ -12,6 +10,8 @@ class CollectionParser(ParserBase):
         items = []
 
         results = self._soup.select("div.results > div.result")
+
+        # TODO check if collection is empty
         for result in results:
             stamp = result.select_one("div.stamp")
             link = stamp.select_one("a")

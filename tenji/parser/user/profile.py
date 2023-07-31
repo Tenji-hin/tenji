@@ -1,5 +1,5 @@
 from tenji.model.user.profile import About, Profile
-from tenji.parser import ParserBase
+from tenji.parser.parser_base import ParserBase
 
 
 class ProfileParser(ParserBase):
