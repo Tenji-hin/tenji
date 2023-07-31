@@ -6,7 +6,7 @@ Asyncronous Python client for scraping data from MyFigureCollection (MFC).
 
 ```python
 import asyncio
-from mfc import MfcClient
+from tenji import MfcClient
 
 async def main():
     client = MfcClient()
