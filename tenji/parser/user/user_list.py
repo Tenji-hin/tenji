@@ -20,8 +20,8 @@ class UserListParser(ParserBase):
         owner = list_info_container.select_one("a.user-anchor").text
 
         description = list_info_container.select_one("div.bbcode").decode_contents()
-        created = list_info_container.select_one("span.time > span:nth-child(2)").get(
-            "title"
+        created = self.try_parse_mfc_time(
+            list_info_container.select_one("span.time > span:nth-child(2)").get("title")
         )
 
         item_stamps = self._soup.select("div.item-stamp")

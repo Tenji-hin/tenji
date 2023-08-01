@@ -1,5 +1,6 @@
 from typing import Optional
 from pydantic import BaseModel
+from datetime import datetime
 
 
 class About(BaseModel):
@@ -26,8 +27,8 @@ class Profile(BaseModel):
     banner: Optional[str] = None
     avatar: Optional[str] = None
     rank: Optional[str] = None
-    last_visit: Optional[str] = None
-    joined: Optional[str] = None
+    last_visit: datetime = None
+    joined: datetime = None
     hits: Optional[int] = None
     placement: Optional[int] = None
 

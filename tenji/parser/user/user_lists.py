@@ -17,10 +17,9 @@ class UserListsParser(ParserBase):
             list_id = self.try_extract_number(link["href"])
             icon = result.select_one("img.list-icon")["src"]
             owner = result.select_one("div.list-meta > a").text
-            created = result.select_one("div.list-stats > span").get("title")
 
             creation_node = result.select_one("div.list-stats > span")
-            created = creation_node.get("title")
+            created = self.try_parse_mfc_time(creation_node.get("title"))
             count = self.try_extract_number(creation_node.next_sibling.text)
 
             list = UserListItem(

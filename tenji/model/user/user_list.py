@@ -1,3 +1,4 @@
+import datetime
 from typing import Optional
 from pydantic import BaseModel
 
@@ -10,7 +11,7 @@ class UserList(BaseModel):
     name: str
     owner: str
     icon: str
-    created: str
+    created: datetime.datetime
     description: Optional[str] = None
     items: list[Item] = []
     tags: Optional[list[str]] = []

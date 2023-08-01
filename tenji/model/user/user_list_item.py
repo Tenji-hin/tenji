@@ -1,3 +1,4 @@
+import datetime
 from pydantic import BaseModel
 
 
@@ -6,5 +7,5 @@ class UserListItem(BaseModel):
     name: str
     owner: str
     icon: str
-    created: str
+    created: datetime.datetime
     count: int = 0

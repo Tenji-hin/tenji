@@ -16,10 +16,12 @@ class ProfileParser(ParserBase):
 
         avatar = self._soup.select_one("img.the-avatar").get("src")
         stats_container = self._soup.select_one("div.object-stats")
-        last_visit = stats_container.select_one("span:nth-child(1)").text
+        last_visit_node = stats_container.select_one("span:nth-child(1)")
+        last_visit_relative = last_visit_node.text
+        last_visit = self.try_parse_mfc_time(last_visit_node.get("title"))
         joined_node = stats_container.select_one("span:nth-child(2)")
         joined_relative = joined_node.text
-        joined = joined_node.get("title")
+        joined = self.try_parse_mfc_time(joined_node.get("title"))
 
         eye_icon_node = stats_container.select_one("span.icon-eye")
         hits = self.try_extract_number(eye_icon_node.next_sibling)
@@ -67,6 +69,7 @@ class ProfileParser(ParserBase):
             occupation=occupation,
             homepage=homepage,
             shows=shows,
+            books=books,
             games=games,
             moe_points=moe_points,
         )
