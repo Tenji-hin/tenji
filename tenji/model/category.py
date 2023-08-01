@@ -8,6 +8,7 @@ class ItemCategory(IntEnum):
     GarageKits = 4
     Plushes = 5
     Accessories = 6
+    ModelKits = 10
     Linens = 13
     Dishes = 14
     HangedUp = 15

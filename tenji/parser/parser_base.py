@@ -1,8 +1,12 @@
 import datetime
 from bs4 import BeautifulSoup, Tag
+from urllib.parse import urlparse
+from urllib.parse import parse_qs
 
 
 import re
+
+from tenji.model.paginated import Pagination
 
 
 class ParserBase:
@@ -80,3 +84,39 @@ class ParserBase:
             return d.replace(tzinfo=datetime.timezone.utc)
         except:
             return None
+
+    def get_trailing_number(self, text: str) -> int:
+        match = re.search(r"\d+$", text)
+        if match:
+            return int(match.group(0))
+        return None
+
+    def try_parse_pagination(self, parent: Tag = None) -> Pagination:
+        p = parent if parent else self._soup
+        pagination_controls = p.select_one("div.results-count")
+        if pagination_controls is None:
+            return None
+
+        current_link = pagination_controls.select_one("a.nav-current")
+        next_link = pagination_controls.select_one("a.nav-next")
+        last_link = pagination_controls.select_one("a.nav-last.nav-end")
+
+        current_page = self.try_extract_number(current_link.text)
+
+        if last_link:
+            total_pages = parse_qs(urlparse(last_link.get("href")).query)["page"][0]
+        else:
+            total_pages = current_page
+
+        total_items = self.try_extract_number(
+            pagination_controls.select_one("div.results-count-value").text
+        )
+
+        pagination = Pagination(
+            current_page=current_page,
+            has_next_page=next_link is not None,
+            total_pages=total_pages,
+            total_items=total_items,
+        )
+
+        return pagination
