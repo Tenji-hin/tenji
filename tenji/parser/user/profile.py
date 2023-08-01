@@ -30,35 +30,37 @@ class ProfileParser(ParserBase):
         about_container = self._soup.select_one("div.data_2")
 
         level = self.try_get_text(
-            "div.form-label:contains('Level') + div > a", about_container
+            "div.form-label:-soup-contains('Level') + div > a", about_container
         )
         gender = self.try_get_text(
-            "div.form-label:contains('Gender') + div > a", about_container
+            "div.form-label:-soup-contains('Gender') + div > a", about_container
         )
-        age = self.try_get_text("div.form-label:contains('Age') + div", about_container)
+        age = self.try_get_text(
+            "div.form-label:-soup-contains('Age') + div", about_container
+        )
         location = self.try_get_text(
-            "div.form-label:contains('Location') + div", about_container
+            "div.form-label:-soup-contains('Location') + div", about_container
         )
         occupation = self.try_get_text(
-            "div.form-label:contains('Occupation') + div", about_container
+            "div.form-label:-soup-contains('Occupation') + div", about_container
         )
         homepage = self.try_get_text(
-            "div.form-label:contains('Homepage') + div > a", about_container
+            "div.form-label:-soup-contains('Homepage') + div > a", about_container
         )
         shows = self.try_get_text(
-            "div.form-label:contains('Shows(s)') + div > a", about_container
+            "div.form-label:-soup-contains('Shows(s)') + div > a", about_container
         )
         books = self.try_get_text(
-            "div.form-label:contains('Book(s)') + div", about_container
+            "div.form-label:-soup-contains('Book(s)') + div", about_container
         )
         games = self.try_get_text(
-            "div.form-label:contains('Game(s)') + div", about_container
+            "div.form-label:-soup-contains('Game(s)') + div", about_container
         )
         games = self.try_get_text(
-            "div.form-label:contains('Game(s)') + div", about_container
+            "div.form-label:-soup-contains('Game(s)') + div", about_container
         )
         moe_points = self.try_get_text(
-            "div.form-label:contains('MOE Point(s)') + div", about_container
+            "div.form-label:-soup-contains('MOE Point(s)') + div", about_container
         )
 
         about = About(
