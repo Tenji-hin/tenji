@@ -45,8 +45,8 @@ class ProfileParser(ParserBase):
         occupation = self.try_get_text(
             "div.form-label:-soup-contains('Occupation') + div", about_container
         )
-        homepage = self.try_get_text(
-            "div.form-label:-soup-contains('Homepage') + div > a", about_container
+        homepage = self.try_get_value(
+            "div.form-label:-soup-contains('Homepage') + div > a", "href", about_container
         )
         shows = self.try_get_text(
             "div.form-label:-soup-contains('Shows(s)') + div > a", about_container
