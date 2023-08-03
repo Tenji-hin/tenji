@@ -97,9 +97,23 @@ class ParserBase:
         if pagination_controls is None:
             return None
 
-        current_link = pagination_controls.select_one("a.nav-current")
-        next_link = pagination_controls.select_one("a.nav-next")
-        last_link = pagination_controls.select_one("a.nav-last.nav-end")
+        total_items = self.try_extract_number(
+            pagination_controls.select_one("div.results-count-value").text
+        )
+
+        nav_controls = pagination_controls.select_one("div.results-count-pages")
+
+        if nav_controls is None:
+            return Pagination(
+                current_page=1,
+                has_next_page=False,
+                total_pages=1,
+                total_items=total_items,
+            )
+
+        current_link = nav_controls.select_one("a.nav-current")
+        next_link = nav_controls.select_one("a.nav-next")
+        last_link = nav_controls.select_one("a.nav-last.nav-end")
 
         current_page = self.try_extract_number(current_link.text)
 
@@ -107,10 +121,6 @@ class ParserBase:
             total_pages = parse_qs(urlparse(last_link.get("href")).query)["page"][0]
         else:
             total_pages = current_page
-
-        total_items = self.try_extract_number(
-            pagination_controls.select_one("div.results-count-value").text
-        )
 
         pagination = Pagination(
             current_page=current_page,

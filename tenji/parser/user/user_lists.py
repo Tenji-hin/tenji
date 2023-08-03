@@ -1,4 +1,3 @@
-from tenji.model.paginated import Pagination
 from tenji.model.user.user_list_item import UserListItem
 from tenji.model.user.users_lists import UserLists
 
@@ -33,17 +32,5 @@ class UserListsParser(ParserBase):
 
             items.append(list)
 
-        pagination_controls = self._soup.select_one("div.results-count-pages")
-
-        if pagination_controls is None:
-            return UserLists(items=items)
-
-        current_link = pagination_controls.select_one("a.nav-current")
-        next_link = pagination_controls.select_one("a.nav-next")
-
-        pagination = Pagination(
-            current_page=self.try_extract_number(current_link.text),
-            has_next_page=next_link is not None,
-        )
-
+        pagination = self.try_parse_pagination()
         return UserLists(items=items, pagination=pagination)
