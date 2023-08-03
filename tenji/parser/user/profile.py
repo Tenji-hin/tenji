@@ -1,3 +1,4 @@
+import datetime
 from tenji.model.user.profile import About, Profile
 from tenji.parser.parser_base import ParserBase
 
@@ -18,7 +19,7 @@ class ProfileParser(ParserBase):
         stats_container = self._soup.select_one("div.object-stats")
         last_visit_node = stats_container.select_one("span:nth-child(1)")
         last_visit_relative = last_visit_node.text
-        last_visit = self.try_parse_mfc_time(last_visit_node.get("title"))
+        last_visit = self.try_parse_mfc_time(last_visit_node.get("title"), datetime.datetime.utcnow())
         joined_node = stats_container.select_one("span:nth-child(2)")
         joined_relative = joined_node.text
         joined = self.try_parse_mfc_time(joined_node.get("title"))

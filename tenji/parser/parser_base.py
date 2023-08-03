@@ -76,14 +76,14 @@ class ParserBase:
             return node.next_sibling
         return None
 
-    def try_parse_mfc_time(self, date: str) -> datetime.datetime:
+    def try_parse_mfc_time(self, date: str, default: datetime.datetime = None) -> datetime.datetime:
         try:
             # ex 12/21/2017, 13:01:50
             format = "%m/%d/%Y, %H:%M:%S"
             d = datetime.datetime.strptime(date, format)
             return d.replace(tzinfo=datetime.timezone.utc)
         except:
-            return None
+            return default
 
     def get_trailing_number(self, text: str) -> int:
         match = re.search(r"\d+$", text)
