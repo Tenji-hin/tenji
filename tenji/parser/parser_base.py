@@ -3,24 +3,37 @@ from bs4 import BeautifulSoup, Tag
 from urllib.parse import urlparse
 from urllib.parse import parse_qs
 
-
+import json
 import re
+from tenji.mfc_response import MFCResponse
 
 from tenji.model.paginated import Pagination
 
 
 class ParserBase:
-    def __init__(self, soup: BeautifulSoup) -> None:
-        self._soup = soup
 
-    def parse(
-        self,
-        selector: str,
-        parent: Tag = None,
-    ):
-        p = parent if parent else self._soup
-        node = p.select_one(selector) if selector else p
-        return node
+    def __init__(self, response: MFCResponse) -> None:
+        self.response = response
+        self.__soup = None
+        self.__json = None
+
+    def parse_html(self, html: str) -> BeautifulSoup:
+        return BeautifulSoup(html, "html.parser")
+    
+    def parse_json(self, json_str: str) -> dict:
+        return json.loads(json_str)
+
+    @property
+    def _soup(self) -> BeautifulSoup:
+        if self.__soup is None:
+            self.__soup = self.parse_html(self.response.body)
+        return self.__soup
+    
+    @property
+    def _json(self) -> BeautifulSoup:
+        if self.__json is None:
+            self.__json = self.parse_json(self.response.body)
+        return self.__json
 
     def try_get_tag(
         self,
@@ -90,6 +103,14 @@ class ParserBase:
         if match:
             return int(match.group(0))
         return None
+    
+    def try_get_url_query_value(self, url: str, key: str, default_value=None):
+        query = urlparse(url).query
+        if query:
+            params = parse_qs(query)
+            if key in params:
+                return params[key][0]
+        return default_value
 
     def try_parse_pagination(self, parent: Tag = None) -> Pagination:
         p = parent if parent else self._soup

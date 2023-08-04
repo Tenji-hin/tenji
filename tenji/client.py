@@ -1,6 +1,6 @@
 from http.cookies import SimpleCookie
-from bs4 import BeautifulSoup
 from tenji.exceptions import *
+from tenji.mfc_response import MFCResponse
 from tenji.model import *
 from tenji.parser import *
 from tenji.request import *
@@ -8,13 +8,6 @@ import aiohttp
 import logging
 
 from tenji.request.request_base import RequestBase
-
-
-class MFCResponse:
-    def __init__(self, response: aiohttp.ClientResponse, soup: BeautifulSoup) -> None:
-        self.response = response
-        self.soup = soup
-
 
 class MFCException(Exception):
     def __init__(self, message: str) -> None:
@@ -47,7 +40,7 @@ class MfcClient:
         """Returns a tuple of whether the client is logged in and the username"""
         req = HomeRequest()
         res = await self.__perform_modeled_request(req)
-        parser = HomeParser(res.soup)
+        parser = HomeParser(res)
         meta = parser.parse()
         return (meta.is_guest, meta.username)
 
@@ -82,7 +75,7 @@ class MfcClient:
         req = ProfileRequest(username)
         res = await self.__perform_modeled_request(req)
         try:
-            parser = ProfileParser(res.soup)
+            parser = ProfileParser(res)
             profile = parser.parse()
         except Exception as e:
             raise ParserException.from_request(req, e)
@@ -95,7 +88,7 @@ class MfcClient:
         req = CollectionRequest(username, status, page)
         res = await self.__perform_modeled_request(req)
         try:
-            parser = CollectionParser(res.soup)
+            parser = CollectionParser(res)
             collection = parser.parse()
         except Exception as e:
             raise ParserException.from_request(req, e)
@@ -106,7 +99,7 @@ class MfcClient:
         req = UserListsRequest(username)
         res = await self.__perform_modeled_request(req)
         try:
-            parser = UserListsParser(res.soup)
+            parser = UserListsParser(res)
             lists = parser.parse()
         except Exception as e:
             raise ParserException.from_request(req, e)
@@ -117,7 +110,7 @@ class MfcClient:
         req = ItemRequest(id)
         res = await self.__perform_modeled_request(req)
         try:
-            parser = ItemParser(res.soup)
+            parser = ItemParser(res)
             item = parser.parse()
         except Exception as e:
             raise ParserException.from_request(req, e)
@@ -129,19 +122,43 @@ class MfcClient:
         req = UserListRequest(id, page)
         res = await self.__perform_modeled_request(req)
         try:
-            parser = UserListParser(res.soup)
+            parser = UserListParser(res)
             list = parser.parse()
         except Exception as e:
             raise ParserException.from_request(req, e)
 
         return list
 
+    async def get_partner_listings(self, item_id: int) -> list[PartnerListing]:
+        """Returns item availabilities from partners"""
+        req = BuyItemRequest(item_id)
+        res = await self.__perform_modeled_request(req)
+        
+        try:
+            parser = PartnerItemListingParser(res)
+            listings = parser.parse()
+        except Exception as e:
+            raise ParserException.from_request(req, e)
+        return listings
+    
+    async def get_user_listings(self, item_id: int, jan: int):
+        """ Returns item availabilities from users"""
+        req = BuyItemRequest(item_id, jan, True)
+        res = await self.__perform_modeled_request(req)
+        
+        try:
+            parser = PartnerItemListingParser(res)
+            listings = parser.parse()
+        except Exception as e:
+            raise ParserException.from_request(req, e)
+        return listings
+
     async def get_shop(self, id: int) -> Shop:
         """Returns a Shop object for the given id"""
         req = ShopRequest(id)
         res = await self.__perform_modeled_request(req)
         try:
-            parser = ShopParser(res.soup)
+            parser = ShopParser(res)
             shop = parser.parse()
         except Exception as e:
             raise ParserException.from_request(req, e)
@@ -159,7 +176,7 @@ class MfcClient:
         req = ShopsRequest(keywords, location, average_score, category, page)
         res = await self.__perform_modeled_request(req)
         try:
-            parser = ShopsParser(res.soup)
+            parser = ShopsParser(res)
             shop = parser.parse()
         except Exception as e:
             raise ParserException.from_request(req, e)
@@ -172,17 +189,15 @@ class MfcClient:
         if method == "GET":
             async with self._session.get(req.getPath()) as response:
                 if response.status != 200:
-                    raise Exception("Failed to perform request")
+                    raise Exception(f"Failed to perform request: {req.getPath()}")
                 response_body = await response.text()
         elif method == "POST":
             async with self._session.post(
                 req.getPath(), data=req.getParams()
             ) as response:
                 if response.status != 200:
-                    raise Exception("Failed to perform request")
+                    raise Exception(f"Failed to perform request {req.getPath()}")
                 response_body = await response.text()
-
-        soup = BeautifulSoup(response_body, "html.parser")
-
-        res = MFCResponse(response, soup)
+  
+        res = MFCResponse(response_body)
         return res

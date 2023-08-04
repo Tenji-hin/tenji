@@ -13,3 +13,7 @@ class RequestBase:
     def build_params_url(self, params={}) -> str:
         params = {k: v for k, v in params.items() if v is not None}
         return urllib.parse.urlencode(params)
+    
+    def build_params(self, params={}):
+        params = {k: v for k, v in params.items() if v is not None}
+        return params
