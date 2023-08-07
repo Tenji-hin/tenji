@@ -4,20 +4,12 @@ from tenji.parser.parser_base import ParserBase
 
 class PartnerItemListingParser(ParserBase):
 
-    def parse(self):
-        html_values = self._json["htmlValues"]
-        if html_values is None:
-            return None
-        
-        html = html_values["WINDOW"]
-        if html is None:
-            return None
-        
-        soup = self.parse_html(html)
+    def parse(self) -> list[PartnerListing]:
+        self.parse_html_from_json(self.response.body)
 
-        partners = []
+        listings = []
         
-        results = soup.select("div.result")
+        results = self._soup.select("div.result")
         for result in results:
             stamp = result.select_one("div.stamp")
             link = stamp.select_one("a")
@@ -31,7 +23,7 @@ class PartnerItemListingParser(ParserBase):
 
             availability = stamp_data.select_one("div.item-availability").text
 
-            buy = PartnerListing(
+            listing = PartnerListing(
                 shop_icon=icon,
                 shop_name=name,
                 url=url,
@@ -40,9 +32,9 @@ class PartnerItemListingParser(ParserBase):
                 status=availability
             )
 
-            partners.append(buy)
+            listings.append(listing)
 
-        return partners
+        return listings
 
 
 
