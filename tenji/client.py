@@ -140,18 +140,6 @@ class MfcClient:
         except Exception as e:
             raise ParserException.from_request(req, e)
         return listings
-    
-    async def get_user_listings(self, item_id: int, jan: int):
-        """ Returns item availabilities from users"""
-        req = BuyItemRequest(item_id, jan, True)
-        res = await self.__perform_modeled_request(req)
-        
-        try:
-            parser = PartnerItemListingParser(res)
-            listings = parser.parse()
-        except Exception as e:
-            raise ParserException.from_request(req, e)
-        return listings
 
     async def get_shop(self, id: int) -> Shop:
         """Returns a Shop object for the given id"""

@@ -15,25 +15,30 @@ class ParserBase:
     def __init__(self, response: MFCResponse) -> None:
         self.response = response
         self.__soup = None
-        self.__json = None
 
-    def parse_html(self, html: str) -> BeautifulSoup:
-        return BeautifulSoup(html, "html.parser")
+    def parse_html(self, html: str):
+        self.__soup = BeautifulSoup(html, "html.parser")
     
     def parse_json(self, json_str: str) -> dict:
         return json.loads(json_str)
 
+    def parse_html_from_json(self, json_str: str) -> str:
+        json_dict = self.parse_json(json_str)
+        html_values = json_dict["htmlValues"]
+        if html_values is None:
+            return None
+        
+        html = html_values["WINDOW"]
+        if html is None:
+            return None
+        
+        self.parse_html(html)
+
     @property
     def _soup(self) -> BeautifulSoup:
         if self.__soup is None:
-            self.__soup = self.parse_html(self.response.body)
+            self.parse_html(self.response.body)
         return self.__soup
-    
-    @property
-    def _json(self) -> BeautifulSoup:
-        if self.__json is None:
-            self.__json = self.parse_json(self.response.body)
-        return self.__json
 
     def try_get_tag(
         self,
@@ -103,6 +108,12 @@ class ParserBase:
         if match:
             return int(match.group(0))
         return None
+    
+    def get_item_id_from_thumbnail(self, thumbnail: str) -> int:
+        # https://static.myfigurecollection.net/upload/items/0/198579-4200e.jpg
+        filename =  thumbnail.split("/")[-1]
+        id = filename.split("-")[0]
+        return int(id)
     
     def try_get_url_query_value(self, url: str, key: str, default_value=None):
         query = urlparse(url).query
