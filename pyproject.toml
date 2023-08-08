@@ -1,0 +1,33 @@
+[project]
+name = "tenji"
+version = "0.1"
+authors = [
+  { name="Nate Shoffner", email="nate.shoffner@gmail.com" },
+]
+description = "Asyncronous Python client for scraping data from MyFigureCollection (MFC)."
+keywords = ["myfigurecollection", "mfc", "parser", "scraper"]
+readme = "README.md"
+requires-python = ">=3.9"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+dependencies = [
+    "aiohttp", 
+    "beautifulsoup", 
+    "pydantic"
+]
+
+[tool.pytest.ini_options]
+pythonpath = [
+  "tenji"
+]
+
+[tool.setuptools.packages.find]
+where = ["tenji"]
+
+[project.urls]
+"Homepage" = "https://github.com/Tenji-hin/tenji"
+"Bug Tracker" = "https://github.com/Tenji-hin/tenji/issues"
