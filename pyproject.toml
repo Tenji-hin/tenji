@@ -1,6 +1,6 @@
 [project]
 name = "tenji"
-version = "0.1"
+version = "0.1.2"
 authors = [
   { name="Nate Shoffner", email="nate.shoffner@gmail.com" },
 ]
@@ -16,17 +16,17 @@ classifiers = [
 
 dependencies = [
     "aiohttp", 
-    "beautifulsoup", 
+    "beautifulsoup4", 
     "pydantic"
 ]
 
 [tool.pytest.ini_options]
 pythonpath = [
-  "tenji"
+  "src"
 ]
 
 [tool.setuptools.packages.find]
-where = ["tenji"]
+where = ["src"]
 
 [project.urls]
 "Homepage" = "https://github.com/Tenji-hin/tenji"
