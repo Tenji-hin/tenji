@@ -17,6 +17,7 @@ class CollectionParser(ParserBase):
         results = self._soup.select("div.results > div.result")
 
         # TODO check if collection is empty
+        # TODO favorites only supports grid view
         for result in results:
             stamp = result.select_one("div.stamp")
             link = stamp.select_one("a")
