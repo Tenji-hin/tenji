@@ -1,23 +1,45 @@
+from typing import Any, Optional
 from bs4 import PageElement
+from pydantic import BaseModel
 from tenji.model.category import get_item_category_from_str
-from tenji.model.item.item import Company, Item
+from tenji.model.item.item import Character, Company, Item
 from tenji.parser.parser_base import ParserBase
 
 
 class ItemParser(ParserBase):
 
-    def get_item_field_element(self, label: str) -> PageElement():
+    class ItemField(BaseModel):
+        img: Optional[str] = None
+        url: str
+        name: str
+        element: Optional[Any] = None
+
+    def try_get_item_fields(self, labels: list[str]) -> list[ItemField]:
+        fields = []
+        for label in labels:
+            container = self.get_item_field_container(label)
+            if not container:
+                continue
+
+            field_links = container.select("a")
+
+            for field_link in field_links:
+                img_elem = field_link.select_one("img")
+                img_url = img_elem.get("src") if img_elem else None
+                url = field_link.get("href")
+                name = field_link.select_one("span").text
+
+                field = ItemParser.ItemField(img=img_url, url=url, name=name, element=field_link)
+                fields.append(field)
+
+        return fields
+
+    def get_item_field_container(self, label: str) -> PageElement():
         label_node = self._soup.select_one(
             f"div.item-object div.form-label:-soup-contains('{label}')"
         )
         if label_node:
             return label_node.next_sibling
-        return None
-
-    def get_item_field_value(self, label: str) -> str:
-        node = self.get_item_field_element(label)
-        if node:
-            return node.text
         return None
 
     def parse(self) -> Item:
@@ -28,20 +50,33 @@ class ItemParser(ParserBase):
             self.get_next_sibling_of("span.icon-tag").text
         )
 
-        # company label is pluralized if there are multiple companies, so we need to check both
-        company_elems = self.get_item_field_element("Company")
-        if not company_elems:
-            company_elems = self.get_item_field_element("Companies")
+        character_items = self.try_get_item_fields(["Character", "Characters"])
+        characters = []
+        for character_item in character_items:
+            character = Character(
+                id=self.try_extract_number(character_item.url),
+                name=character_item.name,
+                avatar=character_item.img,
+            )
+            characters.append(character)
 
+        company_items = self.try_get_item_fields(["Company", "Companies"])
         companies = []
+        for company_item in company_items:
+            company = Company(
+                id=self.try_extract_number(company_item.url),
+                name=company_item.name,
+                logo=company_item.img,
+                role=company_item.element.select_one("small").text.replace("As ", "")
+            )
+            companies.append(company)
 
-        for company_links in company_elems.select("a"):
-            company_id = self.try_extract_number(company_links.get("href"))
-            company_logo = company_links.select_one("img").get("src")
-            company_name = company_links.select_one("span").text
-            company_role = company_links.select_one("small").text.replace("As ", "")
-
-            c = Company(id=company_id, name=company_name, logo=company_logo, role=company_role)
-            companies.append(c)
-
-        return Item(id=id, name=name, thumbnail=thumbnail, category=category, companies=companies)
+        item = Item(
+            id=id,
+            name=name,
+            thumbnail=thumbnail,
+            category=category,
+            characters=characters,
+            companies=companies
+        )
+        return item
