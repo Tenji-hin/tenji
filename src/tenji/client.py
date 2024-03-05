@@ -1,6 +1,5 @@
 from http.cookies import SimpleCookie
 from tenji.exceptions import *
-from tenji.exceptions.request_exception import TenjiRequestException
 from tenji.mfc_response import MFCResponse
 from tenji.model import *
 from tenji.parser import *
@@ -178,14 +177,14 @@ class MfcClient:
         if method == "GET":
             async with self._session.get(req.getPath()) as response:
                 if response.status != 200:
-                    raise TenjiRequestException(f"Failed to perform request: {req.getPath()}")
+                    raise RequestException(f"Failed to perform request: {req.getPath()}")
                 response_body = await response.text()
         elif method == "POST":
             async with self._session.post(
                 req.getPath(), data=req.getParams()
             ) as response:
                 if response.status != 200:
-                    raise TenjiRequestException(f"Failed to perform request {req.getPath()}")
+                    raise RequestException(f"Failed to perform request {req.getPath()}")
                 response_body = await response.text()
   
         res = MFCResponse(response_body)
