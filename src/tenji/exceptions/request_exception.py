@@ -7,5 +7,5 @@ class RequestException(Exception):
 
     @staticmethod
     def from_request(request: RequestBase, previous: Exception):
-        msg = RequestException(f"Failed to perform request {request.getPath()}")
+        msg = RequestException(f"Failed to perform request {request.get_path()}")
         return RequestException(msg).with_traceback(previous.__traceback__)

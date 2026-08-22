@@ -5,8 +5,8 @@ class ShopRequest(RequestBase):
     def __init__(self, id: int) -> None:
         self.id = id
 
-    def getPath(self) -> str:
+    def get_path(self) -> str:
         return f"{self.BASE_URL}shop/{self.id}"
 
-    def getMethod(self):
+    def get_method(self):
         return "GET"

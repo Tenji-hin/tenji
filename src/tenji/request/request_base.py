@@ -4,10 +4,10 @@ import urllib.parse
 class RequestBase:
     BASE_URL = "https://myfigurecollection.net/"
 
-    def getPath(self):
+    def get_path(self):
         raise NotImplementedError()
 
-    def getMethod(self):
+    def get_method(self):
         raise NotImplementedError()
 
     def build_params_url(self, params={}) -> str:

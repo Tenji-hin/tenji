@@ -7,5 +7,5 @@ class ParserException(Exception):
 
     @staticmethod
     def from_request(request: RequestBase, previous: Exception):
-        msg = ParserException(f"Failed to parse {request.getPath()}")
+        msg = ParserException(f"Failed to parse {request.get_path()}")
         return ParserException(msg).with_traceback(previous.__traceback__)

@@ -5,8 +5,8 @@ class HomeRequest(RequestBase):
     def __init__(self) -> None:
         pass
 
-    def getPath(self) -> str:
+    def get_path(self) -> str:
         return self.BASE_URL
 
-    def getMethod(self):
+    def get_method(self):
         return "GET"

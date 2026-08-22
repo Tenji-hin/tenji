@@ -13,8 +13,10 @@ class CollectionRequest(RequestBase):
         self.status = status
         self.page = page
 
-    def getPath(self) -> str:
-        return f"{self.BASE_URL}users.v4.php?mode=view&username={self.username}&tab=collection&page={self.page}&status={self.status}&output=0"
+    def get_path(self) -> str:
+        # the raw value, as formatting the enum yields its name on Python 3.11+
+        status = getattr(self.status, "value", self.status)
+        return f"{self.BASE_URL}users.v4.php?mode=view&username={self.username}&tab=collection&page={self.page}&status={status}&output=0"
 
-    def getMethod(self):
+    def get_method(self):
         return "GET"

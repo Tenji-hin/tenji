@@ -6,8 +6,8 @@ class UserListsRequest(RequestBase):
         self.username = username
         self.page = page
 
-    def getPath(self) -> str:
+    def get_path(self) -> str:
         return f"{self.BASE_URL}users.v4.php?mode=view&username={self.username}&tab=lists&page={self.page}"
 
-    def getMethod(self):
+    def get_method(self):
         return "GET"

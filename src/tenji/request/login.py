@@ -6,13 +6,13 @@ class LoginRequest(RequestBase):
         self.username = username
         self.password = password
 
-    def getPath(self) -> str:
+    def get_path(self) -> str:
         return f"{self.BASE_URL}sessions.v4.php"
 
-    def getMethod(self):
+    def get_method(self):
         return "POST"
 
-    def getParams(self):
+    def get_params(self):
         return {
             "username": self.username,
             "password": self.password,

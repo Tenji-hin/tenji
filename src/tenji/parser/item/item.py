@@ -15,6 +15,12 @@ class ItemParser(ParserBase):
         element: Optional[Any] = None
 
     def try_get_item_fields(self, labels: list[str]) -> list[ItemField]:
+        """Collects the links of the first matching label.
+
+        The labels are alternate spellings of the same field (ex "Character" and
+        "Characters"), so only the first match is used. Matching is done on a
+        substring basis, meaning a singular label also matches its plural.
+        """
         fields = []
         for label in labels:
             container = self.get_item_field_container(label)
@@ -31,6 +37,8 @@ class ItemParser(ParserBase):
 
                 field = ItemParser.ItemField(img=img_url, url=url, name=name, element=field_link)
                 fields.append(field)
+
+            break
 
         return fields
 
