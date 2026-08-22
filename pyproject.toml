@@ -1,33 +1,55 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "tenji"
-version = "0.2"
+version = "0.3"
 authors = [
   { name="Nate Shoffner", email="nate.shoffner@gmail.com" },
 ]
-description = "Asyncronous Python client for scraping data from MyFigureCollection (MFC)."
-keywords = ["myfigurecollection", "mfc", "parser", "scraper"]
+description = "Asynchronous Python client for scraping data from MyFigureCollection (MFC)."
+keywords = ["myfigurecollection", "mfc", "parser", "scraper", "async"]
 readme = "README.md"
 requires-python = ">=3.9"
+license = "MIT"
+license-files = ["LICENSE"]
 classifiers = [
-    "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
+    "Development Status :: 3 - Alpha",
+    "Framework :: AsyncIO",
+    "Intended Audience :: Developers",
     "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Internet :: WWW/HTTP",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
 ]
 
 dependencies = [
-    "aiohttp", 
-    "beautifulsoup4", 
-    "pydantic"
+    "aiohttp>=3.9",
+    "beautifulsoup4>=4.11",
+    "pydantic>=2",
+    "yarl>=1.9",
 ]
 
-[tool.pytest.ini_options]
-pythonpath = [
-  "src"
-]
+[project.optional-dependencies]
+test = ["pytest>=7"]
+
+[project.urls]
+Homepage = "https://github.com/Tenji-hin/tenji"
+Repository = "https://github.com/Tenji-hin/tenji"
+"Bug Tracker" = "https://github.com/Tenji-hin/tenji/issues"
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
-[project.urls]
-"Homepage" = "https://github.com/Tenji-hin/tenji"
-"Bug Tracker" = "https://github.com/Tenji-hin/tenji/issues"
+[tool.setuptools.package-data]
+tenji = ["py.typed"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
