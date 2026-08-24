@@ -99,7 +99,7 @@ class MfcClient:
             parser = ProfileParser(res)
             profile = parser.parse()
         except Exception as e:
-            raise ParserException.from_request(req, e)
+            raise ParserException.from_request(req, e) from e
         return profile
 
     async def get_collection(
@@ -112,7 +112,7 @@ class MfcClient:
             parser = CollectionParser(res)
             collection = parser.parse()
         except Exception as e:
-            raise ParserException.from_request(req, e)
+            raise ParserException.from_request(req, e) from e
         return collection
 
     async def get_lists(self, username: str) -> UserLists:
@@ -123,7 +123,7 @@ class MfcClient:
             parser = UserListsParser(res)
             lists = parser.parse()
         except Exception as e:
-            raise ParserException.from_request(req, e)
+            raise ParserException.from_request(req, e) from e
         return lists
 
     async def get_item(self, id: int) -> Item:
@@ -134,7 +134,7 @@ class MfcClient:
             parser = ItemParser(res)
             item = parser.parse()
         except Exception as e:
-            raise ParserException.from_request(req, e)
+            raise ParserException.from_request(req, e) from e
 
         return item
 
@@ -146,7 +146,7 @@ class MfcClient:
             parser = UserListParser(res)
             list = parser.parse()
         except Exception as e:
-            raise ParserException.from_request(req, e)
+            raise ParserException.from_request(req, e) from e
 
         return list
 
@@ -159,7 +159,7 @@ class MfcClient:
             parser = PartnerItemListingParser(res)
             listings = parser.parse()
         except Exception as e:
-            raise ParserException.from_request(req, e)
+            raise ParserException.from_request(req, e) from e
         return listings
 
     async def get_shop(self, id: int) -> Shop:
@@ -170,7 +170,7 @@ class MfcClient:
             parser = ShopParser(res)
             shop = parser.parse()
         except Exception as e:
-            raise ParserException.from_request(req, e)
+            raise ParserException.from_request(req, e) from e
         return shop
 
     async def get_shops(
@@ -188,7 +188,7 @@ class MfcClient:
             parser = ShopsParser(res)
             shop = parser.parse()
         except Exception as e:
-            raise ParserException.from_request(req, e)
+            raise ParserException.from_request(req, e) from e
         return shop
 
     async def __perform_modeled_request(self, req: RequestBase) -> MFCResponse:
@@ -196,17 +196,20 @@ class MfcClient:
 
         method = req.get_method()
         if method == "GET":
-            async with self.session.get(req.get_path()) as response:
-                if response.status != 200:
-                    raise RequestException(f"Failed to perform request: {req.get_path()}")
-                response_body = await response.text()
+            request = self.session.get(req.get_path())
         elif method == "POST":
-            async with self.session.post(
-                req.get_path(), data=req.get_params()
-            ) as response:
-                if response.status != 200:
-                    raise RequestException(f"Failed to perform request {req.get_path()}")
-                response_body = await response.text()
-  
-        res = MFCResponse(response_body)
-        return res
+            request = self.session.post(req.get_path(), data=req.get_params())
+        else:
+            raise RequestException(
+                f"Unsupported request method {method!r} for {req.get_path()}"
+            )
+
+        async with request as response:
+            if response.status != 200:
+                raise RequestException(
+                    f"Failed to perform request: {req.get_path()} "
+                    f"returned HTTP {response.status}"
+                )
+            response_body = await response.text()
+
+        return MFCResponse(response_body)

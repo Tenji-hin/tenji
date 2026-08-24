@@ -11,6 +11,7 @@ from tenji.exceptions.parser_exception import ParserException
 from tenji.exceptions.request_exception import RequestException
 from tenji.model.category import ItemCategory
 from tenji.model.user.collectionstatus import CollectionStatus
+from tenji.request.item.item import ItemRequest
 
 from conftest import read_fixture
 
@@ -220,6 +221,42 @@ class TestClientErrors:
         session = FakeSession("<html><body>maintenance</body></html>")
         with pytest.raises(ParserException):
             run_with_session(session, lambda c: c.get_item(198579))
+
+    def test_the_failing_url_and_cause_are_reported(self):
+        session = FakeSession("<html><body>maintenance</body></html>")
+        with pytest.raises(RequestException, match="HTTP 500"):
+            run_with_session(FakeSession("", status=500), lambda c: c.get_item(1))
+
+        with pytest.raises(ParserException) as info:
+            run_with_session(session, lambda c: c.get_item(198579))
+
+        assert "https://myfigurecollection.net/item/198579" in str(info.value)
+        # the original parsing error stays reachable rather than being swallowed
+        assert info.value.__cause__ is not None
+
+    def test_an_unknown_category_is_reported_with_its_label(self):
+        html = read_fixture("item.html").replace("Prepainted", "Sculptures")
+        with pytest.raises(ParserException) as info:
+            run_with_session(FakeSession(html), lambda c: c.get_item(198579))
+
+        # the label MFC actually served has to survive into the message
+        assert "Sculptures" in str(info.value)
+
+    def test_an_unsupported_method_raises_instead_of_unbound_local(self):
+        class PatchRequest(ItemRequest):
+            def get_method(self):
+                return "PATCH"
+
+        session = FakeSession("")
+
+        async def main():
+            client = MfcClient()
+            client.set_session(session)
+            return await client._MfcClient__perform_modeled_request(PatchRequest(1))
+
+        with pytest.raises(RequestException, match="Unsupported request method"):
+            asyncio.run(main())
+        assert session.calls == []
 
     def test_parser_failures_are_wrapped_for_every_endpoint(self):
         broken = "<html><body>maintenance</body></html>"
