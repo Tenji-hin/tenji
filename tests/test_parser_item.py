@@ -1,5 +1,6 @@
 import pytest
 
+from tenji.mfc_response import MFCResponse
 from tenji.model.category import ItemCategory
 from tenji.parser.item.item import ItemParser
 
@@ -45,6 +46,19 @@ class TestItemParser:
             item.companies[0].logo
             == "https://static.myfigurecollection.net/upload/entries/0/1111.jpg"
         )
+
+
+class TestItemCategoryParsing:
+    def test_model_kits_items_parse(self, fixture_text):
+        # ModelKits had no label mapping, so these items failed validation
+        html = fixture_text("item.html").replace("Prepainted", "Model Kits")
+        item = ItemParser(MFCResponse(html)).parse()
+        assert item.category is ItemCategory.ModelKits
+
+    def test_an_unknown_category_names_the_label(self, fixture_text):
+        html = fixture_text("item.html").replace("Prepainted", "Sculptures")
+        with pytest.raises(ValueError, match="Sculptures"):
+            ItemParser(MFCResponse(html)).parse()
 
 
 class TestItemFieldLookup:

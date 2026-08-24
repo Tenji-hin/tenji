@@ -17,6 +17,7 @@ CATEGORY_LABELS = {
     "Action/Dolls": ItemCategory.ActionDolls,
     "Trading": ItemCategory.Trading,
     "Garage Kits": ItemCategory.GarageKits,
+    "Model Kits": ItemCategory.ModelKits,
     "Plushes": ItemCategory.Plushes,
     "Accessories": ItemCategory.Accessories,
     "Linens": ItemCategory.Linens,
@@ -39,14 +40,25 @@ class TestItemCategory:
     def test_maps_labels_to_categories(self, label, expected):
         assert get_item_category_from_str(label) == expected
 
-    @pytest.mark.parametrize("label", ["", "prepainted", "Unknown", "Model Kits"])
-    def test_returns_none_for_unknown_labels(self, label):
-        assert get_item_category_from_str(label) is None
+    @pytest.mark.parametrize("label", ["", "prepainted", "Unknown", "Figures"])
+    def test_raises_for_unknown_labels(self, label):
+        with pytest.raises(ValueError, match="Unknown MFC item category"):
+            get_item_category_from_str(label)
 
-    def test_every_category_except_model_kits_has_a_label(self):
-        # ModelKits has no label mapping; guard the rest against typos.
-        mapped = set(CATEGORY_LABELS.values())
-        assert set(ItemCategory) - mapped == {ItemCategory.ModelKits}
+    def test_the_unknown_label_is_named_in_the_error(self):
+        with pytest.raises(ValueError, match="Figurines"):
+            get_item_category_from_str("Figurines")
+
+    @pytest.mark.parametrize("label", [None, 1, []])
+    def test_raises_for_non_string_input(self, label):
+        with pytest.raises(ValueError, match="must be a string"):
+            get_item_category_from_str(label)
+
+    def test_surrounding_whitespace_is_ignored(self):
+        assert get_item_category_from_str("  Prepainted\n") is ItemCategory.Prepainted
+
+    def test_every_category_has_a_label(self):
+        assert set(ItemCategory) == set(CATEGORY_LABELS.values())
 
 
 class TestCollectionStatus:

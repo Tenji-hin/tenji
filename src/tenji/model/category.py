@@ -23,40 +23,39 @@ class ItemCategory(IntEnum):
     Software = 29
 
 
+ITEM_CATEGORY_LABELS = {
+    "Prepainted": ItemCategory.Prepainted,
+    "Action/Dolls": ItemCategory.ActionDolls,
+    "Trading": ItemCategory.Trading,
+    "Garage Kits": ItemCategory.GarageKits,
+    "Model Kits": ItemCategory.ModelKits,
+    "Plushes": ItemCategory.Plushes,
+    "Accessories": ItemCategory.Accessories,
+    "Linens": ItemCategory.Linens,
+    "Dishes": ItemCategory.Dishes,
+    "Hanged up": ItemCategory.HangedUp,
+    "Apparel": ItemCategory.Apparel,
+    "On Walls": ItemCategory.OnWalls,
+    "Stationeries": ItemCategory.Stationeries,
+    "Misc": ItemCategory.Misc,
+    "Books": ItemCategory.Books,
+    "Music": ItemCategory.Music,
+    "Video": ItemCategory.Video,
+    "Games": ItemCategory.Games,
+    "Software": ItemCategory.Software,
+}
+
+
 def get_item_category_from_str(category: str) -> ItemCategory:
-    if category == "Prepainted":
-        return ItemCategory.Prepainted
-    elif category == "Action/Dolls":
-        return ItemCategory.ActionDolls
-    elif category == "Trading":
-        return ItemCategory.Trading
-    elif category == "Garage Kits":
-        return ItemCategory.GarageKits
-    elif category == "Plushes":
-        return ItemCategory.Plushes
-    elif category == "Accessories":
-        return ItemCategory.Accessories
-    elif category == "Linens":
-        return ItemCategory.Linens
-    elif category == "Dishes":
-        return ItemCategory.Dishes
-    elif category == "Hanged up":
-        return ItemCategory.HangedUp
-    elif category == "Apparel":
-        return ItemCategory.Apparel
-    elif category == "On Walls":
-        return ItemCategory.OnWalls
-    elif category == "Stationeries":
-        return ItemCategory.Stationeries
-    elif category == "Misc":
-        return ItemCategory.Misc
-    elif category == "Books":
-        return ItemCategory.Books
-    elif category == "Music":
-        return ItemCategory.Music
-    elif category == "Video":
-        return ItemCategory.Video
-    elif category == "Games":
-        return ItemCategory.Games
-    elif category == "Software":
-        return ItemCategory.Software
+    """Maps an MFC category label onto its ItemCategory.
+
+    Raises ValueError for an unrecognised label. Returning None instead would
+    only defer the failure to the model, where category is required, and lose
+    the offending label along the way.
+    """
+    try:
+        return ITEM_CATEGORY_LABELS[category.strip()]
+    except AttributeError:
+        raise ValueError(f"Item category must be a string, got {category!r}") from None
+    except KeyError:
+        raise ValueError(f"Unknown MFC item category: {category!r}") from None
